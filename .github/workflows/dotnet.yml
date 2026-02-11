@@ -57,22 +57,23 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run Smoke test suite
-        run: dotnet test --no-build --verbosity normal --filter "TestCategory=SmokeSuite" --logger "trx;LogFileName=test-results.trx" --settings NUnit.runsettings
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=SmokeSuite" --logger "trx;LogFileName=test-results.trx"
         continue-on-error: true
 
       - name: List allure-results (Debug)
         if: always()
         run: |
-          echo "Checking allure-results directory..."
-          ls -la bin/Debug/net8.0/allure-results || echo "allure-results not found"
-          find . -name "allure-results" -type d || echo "No allure-results found anywhere"
+          echo "=== Checking for allure-results ==="
+          find . -name "allure-results" -type d -exec ls -la {} \;
+          echo "=== Contents of bin/Debug/net8.0 ==="
+          ls -la bin/Debug/net8.0/ || echo "Directory not found"
 
       - name: Publish Test Results
         if: always()
         uses: dorny/test-reporter@v1
         with:
           name: Smoke Test Results
-          path: ReqresApiAutomation/TestResults/test-results.trx
+          path: ReqresApiAutomation/TestResults/**/*.trx
           reporter: dotnet-trx
           fail-on-error: false
 
@@ -126,24 +127,26 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run Regression test suite
-        run: dotnet test --no-build --verbosity normal --filter "TestCategory=RegressionSuite" --logger "trx;LogFileName=test-results.trx" --settings NUnit.runsettings
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=RegressionSuite" --logger "trx;LogFileName=test-results.trx"
         continue-on-error: true
 
       - name: List allure-results (Debug)
         if: always()
         run: |
-          echo "Checking allure-results directory..."
-          ls -la bin/Debug/net8.0/allure-results || echo "allure-results not found"
+          echo "=== Checking for allure-results ==="
+          find . -name "allure-results" -type d -exec ls -la {} \;
+          echo "=== Contents of bin/Debug/net8.0 ==="
+          ls -la bin/Debug/net8.0/ || echo "Directory not found"
 
       - name: Publish Test Results
         if: always()
         uses: dorny/test-reporter@v1
         with:
           name: Regression Test Results
-          path: ReqresApiAutomation/TestResults/test-results.trx
+          path: ReqresApiAutomation/TestResults/**/*.trx
           reporter: dotnet-trx
           fail-on-error: false
-
+            
       - name: Generate Allure report (Regression)
         if: always()
         uses: simple-elf/allure-report-action@master
@@ -194,21 +197,23 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run selected suite
-        run: dotnet test --no-build --verbosity normal --filter "TestCategory=${{ github.event.inputs.suite }}" --logger "trx;LogFileName=test-results.trx" --settings NUnit.runsettings
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=${{ github.event.inputs.suite }}" --logger "trx;LogFileName=test-results.trx"
         continue-on-error: true
 
       - name: List allure-results (Debug)
         if: always()
         run: |
-          echo "Checking allure-results directory..."
-          ls -la bin/Debug/net8.0/allure-results || echo "allure-results not found"
+          echo "=== Checking for allure-results ==="
+          find . -name "allure-results" -type d -exec ls -la {} \;
+          echo "=== Contents of bin/Debug/net8.0 ==="
+          ls -la bin/Debug/net8.0/ || echo "Directory not found"
 
       - name: Publish Test Results
         if: always()
         uses: dorny/test-reporter@v1
         with:
           name: Manual Test Results (${{ github.event.inputs.suite }})
-          path: ReqresApiAutomation/TestResults/test-results.trx
+          path: ReqresApiAutomation/TestResults/**/*.trx
           reporter: dotnet-trx
           fail-on-error: false
 
