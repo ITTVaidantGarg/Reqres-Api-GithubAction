@@ -13,7 +13,7 @@ namespace ReqresApiAutomation.Tests
     public class PostUserTests : TestBase
     {
         [Test]
-        [AllureSeverity(Allure.Commons.SeverityLevel.critical)]
+        [AllureSeverity((Allure.Net.Commons.SeverityLevel)Allure.Commons.SeverityLevel.critical)]
         [AllureDescription("Verify that creating a user returns 201 Created status with user details in response")]
         [AllureTag("smoke", "post", "api", "create")]
         public void CreateUser_ShouldReturn201()

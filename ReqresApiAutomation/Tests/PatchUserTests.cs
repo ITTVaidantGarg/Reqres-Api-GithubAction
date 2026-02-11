@@ -2,8 +2,7 @@
 using NUnit.Framework;
 using System.Net;
 using ReqresApiAutomation.Base;
-using Allure.NUnit.Attributes;
-using Allure.NUnit.Attributes;
+
     
 namespace ReqresApiAutomation.Tests
 {
