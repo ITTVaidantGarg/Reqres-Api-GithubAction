@@ -25,6 +25,11 @@ on:
           - SmokeSuite
           - RegressionSuite
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 jobs:
   smoke:
     name: Smoke Tests (PR)
@@ -50,13 +55,22 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run Smoke test suite
-        run: dotnet test --no-build --verbosity normal --filter "TestCategory=SmokeSuite"
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=SmokeSuite" --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Smoke Test Results
+          path: ReqresApiAutomation/TestResults/test-results.trx
+          reporter: dotnet-trx
+          fail-on-error: false
 
       - name: Generate Allure report (Smoke)
         if: always()
         uses: simple-elf/allure-report-action@master
         with:
-          allure_results: bin/Debug/net8.0/allure-results
+          allure_results: ReqresApiAutomation/bin/Debug/net8.0/allure-results
           allure_report: allure-report
           allure_history: allure-history
 
@@ -92,13 +106,22 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run Regression test suite
-        run: dotnet test --no-build --verbosity normal --filter "TestCategory=RegressionSuite"
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=RegressionSuite" --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Regression Test Results
+          path: ReqresApiAutomation/TestResults/test-results.trx
+          reporter: dotnet-trx
+          fail-on-error: false
 
       - name: Generate Allure report (Regression)
         if: always()
         uses: simple-elf/allure-report-action@master
         with:
-          allure_results: bin/Debug/net8.0/allure-results
+          allure_results: ReqresApiAutomation/bin/Debug/net8.0/allure-results
           allure_report: allure-report
           allure_history: allure-history
 
@@ -134,13 +157,22 @@ jobs:
         run: dotnet build --no-restore
 
       - name: Run selected suite
-        run: dotnet test --no-build --verbosity normal --filter "TestCategory=${{ github.event.inputs.suite }}"
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=${{ github.event.inputs.suite }}" --logger "trx;LogFileName=test-results.trx"
+
+      - name: Publish Test Results
+        if: always()
+        uses: dorny/test-reporter@v1
+        with:
+          name: Manual Test Results (${{ github.event.inputs.suite }})
+          path: ReqresApiAutomation/TestResults/test-results.trx
+          reporter: dotnet-trx
+          fail-on-error: false
 
       - name: Generate Allure report (Manual)
         if: always()
         uses: simple-elf/allure-report-action@master
         with:
-          allure_results: bin/Debug/net8.0/allure-results
+          allure_results: ReqresApiAutomation/bin/Debug/net8.0/allure-results
           allure_report: allure-report
           allure_history: allure-history
 
