@@ -29,6 +29,8 @@ permissions:
   contents: write
   pages: write
   id-token: write
+  checks: write
+  pull-requests: write
 
 jobs:
   smoke:
@@ -71,7 +73,7 @@ jobs:
         uses: simple-elf/allure-report-action@master
         with:
           allure_results: ReqresApiAutomation/bin/Debug/net8.0/allure-results
-          allure_report: allure-report
+          allure_report: allure-report-smoke
           allure_history: allure-history
 
       - name: Upload Allure report (Smoke)
@@ -79,8 +81,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report-smoke
-          path: allure-report
+          path: allure-report-smoke
           retention-days: 7
+
+      - name: Deploy to GitHub Pages (Smoke)
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report-smoke
+          destination_dir: smoke
+          keep_files: true
 
   regression:
     name: Regression Tests (Push / Schedule)
@@ -122,7 +133,7 @@ jobs:
         uses: simple-elf/allure-report-action@master
         with:
           allure_results: ReqresApiAutomation/bin/Debug/net8.0/allure-results
-          allure_report: allure-report
+          allure_report: allure-report-regression
           allure_history: allure-history
 
       - name: Upload Allure report (Regression)
@@ -130,8 +141,17 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report-regression
-          path: allure-report
+          path: allure-report-regression
           retention-days: 7
+
+      - name: Deploy to GitHub Pages (Regression)
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report-regression
+          destination_dir: regression
+          keep_files: true
 
   manual:
     name: Run selected suite (Manual)
@@ -173,7 +193,7 @@ jobs:
         uses: simple-elf/allure-report-action@master
         with:
           allure_results: ReqresApiAutomation/bin/Debug/net8.0/allure-results
-          allure_report: allure-report
+          allure_report: allure-report-manual
           allure_history: allure-history
 
       - name: Upload Allure report (Manual)
@@ -181,6 +201,15 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: allure-report-manual
-          path: allure-report
+          path: allure-report-manual
           retention-days: 7
+
+      - name: Deploy to GitHub Pages (Manual)
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./allure-report-manual
+          destination_dir: manual
+          keep_files: true
 
