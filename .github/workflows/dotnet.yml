@@ -1,0 +1,154 @@
+name: Run API Tests
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'ReqresApiAutomation/**'
+
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'ReqresApiAutomation/**'
+
+  schedule:
+    - cron: '0 0 * * *'
+
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Which test suite to run'
+        required: true
+        default: 'SmokeSuite'
+        type: choice
+        options:
+          - SmokeSuite
+          - RegressionSuite
+
+jobs:
+  smoke:
+    name: Smoke Tests (PR)
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ReqresApiAutomation
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Run Smoke test suite
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=SmokeSuite"
+
+      - name: Generate Allure report (Smoke)
+        if: always()
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: bin/Debug/net8.0/allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Upload Allure report (Smoke)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-smoke
+          path: allure-report
+          retention-days: 7
+
+  regression:
+    name: Regression Tests (Push / Schedule)
+    if: github.event_name == 'push' || github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ReqresApiAutomation
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Run Regression test suite
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=RegressionSuite"
+
+      - name: Generate Allure report (Regression)
+        if: always()
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: bin/Debug/net8.0/allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Upload Allure report (Regression)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-regression
+          path: allure-report
+          retention-days: 7
+
+  manual:
+    name: Run selected suite (Manual)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ReqresApiAutomation
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Run selected suite
+        run: dotnet test --no-build --verbosity normal --filter "TestCategory=${{ github.event.inputs.suite }}"
+
+      - name: Generate Allure report (Manual)
+        if: always()
+        uses: simple-elf/allure-report-action@master
+        with:
+          allure_results: bin/Debug/net8.0/allure-results
+          allure_report: allure-report
+          allure_history: allure-history
+
+      - name: Upload Allure report (Manual)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-report-manual
+          path: allure-report
+          retention-days: 7
+
