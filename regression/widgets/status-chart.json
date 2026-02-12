@@ -1,1 +1,1 @@
-[]
+[{"uid":"6d0e1bfb6f0f78ae","name":"DeleteUser_ShouldReturn204","time":{"start":1770885164037,"stop":1770885164387,"duration":350},"status":"passed","severity":"critical"},{"uid":"4fcfd516caa65fae","name":"PatchUser_ShouldReturn200","time":{"start":1770885164411,"stop":1770885164545,"duration":134},"status":"passed","severity":"normal"},{"uid":"4dce66b8dd4351eb","name":"UpdateUser_ShouldReturn200","time":{"start":1770885164546,"stop":1770885164743,"duration":197},"status":"passed","severity":"normal"}]
