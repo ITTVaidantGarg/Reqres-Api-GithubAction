@@ -1,4 +1,4 @@
-    using NUnit.Framework;
+using NUnit.Framework;
 using System.Net;
 using ReqresApiAutomation.Base;
 using Allure.NUnit.Attributes;
@@ -6,13 +6,14 @@ using Allure.NUnit.Attributes;
 namespace ReqresApiAutomation.Tests
 {
     // Update scenario -> Regression suite
+    [Allure.NUnit.AllureNUnit]
     [TestFixture, Category("RegressionSuite")]
     [AllureSuite("User Management")]
     [AllureFeature("Update User")]
     public class PutUserTests : TestBase
     {
         [Test]
-        [AllureSeverity((Allure.Net.Commons.SeverityLevel)Allure.Commons.SeverityLevel.normal)]
+        [AllureSeverity(Allure.Net.Commons.SeverityLevel.normal)]
         [AllureDescription("Verify that updating a user with PUT method returns 200 OK with updated details")]
         [AllureTag("regression", "put", "api", "update")]
         public void UpdateUser_ShouldReturn200()
