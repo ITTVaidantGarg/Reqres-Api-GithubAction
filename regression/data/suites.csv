@@ -1,4 +1,4 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"Verify that partially updating a user with PATCH method returns 200 OK","323","PatchUser_ShouldReturn200","","2026-09-22","passed","2026-09-22","","User Management","PatchUserTests","PatchUser_ShouldReturn200"
-"Verify that deleting a user returns 204 No Content status","618","DeleteUser_ShouldReturn204","","2026-09-22","passed","2026-09-22","","User Management","DeleteUserTests","DeleteUser_ShouldReturn204"
-"Verify that updating a user with PUT method returns 200 OK with updated details","307","UpdateUser_ShouldReturn200","","2026-09-22","passed","2026-09-22","","User Management","PutUserTests","UpdateUser_ShouldReturn200"
+"Verify that partially updating a user with PATCH method returns 200 OK","331","PatchUser_ShouldReturn200","","2026-09-23","passed","2026-09-23","","User Management","PatchUserTests","PatchUser_ShouldReturn200"
+"Verify that updating a user with PUT method returns 200 OK with updated details","295","UpdateUser_ShouldReturn200","","2026-09-23","passed","2026-09-23","","User Management","PutUserTests","UpdateUser_ShouldReturn200"
+"Verify that deleting a user returns 204 No Content status","508","DeleteUser_ShouldReturn204","","2026-09-23","passed","2026-09-23","","User Management","DeleteUserTests","DeleteUser_ShouldReturn204"
